@@ -27,7 +27,11 @@ The full Gradle build requires SmartThings Artifactory credentials (`smartThings
 ```
 Without these credentials, Gradle tasks will fail at dependency resolution. This is expected.
 
+### MQ5 Expert Advisor files
+- MQ5 files (MetaTrader Expert Advisors) in this repo are standalone trading bot scripts — they cannot be compiled here as they require the MetaTrader 5 IDE/compiler.
+- The user's MT5 Experts folder is: `C:\Users\claus\AppData\Roaming\MetaQuotes\Terminal\AE2CC2E013FDE1E3CDF010AA51C60400\MQL5\Experts\`
+- All new EA code should be committed to the repo root; the user manually copies to the above path for compilation/testing in MT5.
+
 ### Key gotchas
 - Gradle 2.10 **only works with Java 8**. Do not switch `JAVA_HOME` to Java 11+.
 - The `build.gradle` applies proprietary SmartThings plugins that are only available from their private Artifactory. Local builds are limited to `groovyc` syntax checking without those credentials.
-- MQ5 files (MetaTrader Expert Advisors) in this repo are standalone trading bot scripts — they cannot be compiled here as they require the MetaTrader 5 IDE/compiler.
