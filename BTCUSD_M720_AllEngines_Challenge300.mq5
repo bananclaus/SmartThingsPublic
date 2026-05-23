@@ -22,7 +22,7 @@ input int InpMaxPositions                   = 1;
 input int InpMaxTradesPerDay                = 999;
 input int InpMaxLossesPerDay                = 88;
 input int InpCooldownAfterLossMinutes       = 0;
-input int InpMinMsBetweenEntries            = 5000;
+input int InpMinMsBetweenEntries            = 3000;
 
 input bool InpDisableDayStop                = true;
 input bool InpUseDailyTarget                = false;
@@ -50,8 +50,8 @@ input double InpMinRewardRisk               = 1.80;
 input int InpMaxHoldMinutes                 = 45;
 
 input bool InpUseBreakEven                  = true;
-input double InpBE_StartUSD                 = 3.0;
-input double InpBE_LockUSD                  = 0.5;
+input double InpBE_StartUSD                 = 1.5;
+input double InpBE_LockUSD                  = 0.3;
 input bool InpUseTrailing                   = true;
 input double InpTrailStartMoneyUSD          = 15.0;
 input double InpTrailDistanceMoneyUSD       = 10.0;
@@ -59,7 +59,7 @@ input double InpMinSLModifyMoneyUSD         = 3.0;
 input bool InpShowTrailOnChart              = true;
 
 input bool InpUseProfitStepLock             = true;
-input double InpProfitStepUSD                = 10.0;
+input double InpProfitStepUSD                = 8.0;
 
 input bool InpTradeAsia                     = true;
 input int InpAsiaStart                      = 0;
@@ -159,8 +159,8 @@ input int InpVwapAnchorPeriod               = 50;
 input double InpVwapDevAtr                  = 1.5;
 
 input bool InpUseEarlyEntryFilter           = true;
-input double InpMaxCandleUsedPct            = 0.65;
-input double InpMaxDistFromOpenAtr          = 0.70;
+input double InpMaxCandleUsedPct            = 0.55;
+input double InpMaxDistFromOpenAtr          = 0.55;
 
 input bool InpShowDashboard                 = true;
 
