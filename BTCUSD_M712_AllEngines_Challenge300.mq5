@@ -1,28 +1,28 @@
 //+------------------------------------------------------------------+
-//| BTCUSD_M711_AllEngines_Challenge300.mq5                         |
-//| M711: BTC step lock protect exit – no-loss patch
+//| BTCUSD_M712_AllEngines_Challenge300.mq5                         |
+//| M712: BTC anti-loss – cooldown + BE + streak protection
 //+------------------------------------------------------------------+
 #property strict
-#property version "1.01"
+#property version "1.02"
 
 #include <Trade/Trade.mqh>
 
 CTrade trade;
 
 input string InpTradeSymbol                 = "BTCUSD";
-input string InpBotComment                  = "BTCUSD M711 AllEngines";
-input int InpMagicNumber                    = 711;
+input string InpBotComment                  = "BTCUSD M712 AllEngines";
+input int InpMagicNumber                    = 712;
 
 input ENUM_TIMEFRAMES InpSignalTF           = PERIOD_M1;
 input ENUM_TIMEFRAMES InpTrendTF            = PERIOD_M5;
 input int InpSlippagePoints                 = 120;
 
-input double InpLots                        = 0.50;
+input double InpLots                        = 0.40;
 input int InpMaxPositions                   = 1;
-input int InpMaxTradesPerDay                = 999;
-input int InpMaxLossesPerDay                = 88;
-input int InpCooldownAfterLossMinutes       = 0;
-input int InpMinMsBetweenEntries            = 300;
+input int InpMaxTradesPerDay                = 30;
+input int InpMaxLossesPerDay                = 5;
+input int InpCooldownAfterLossMinutes       = 3;
+input int InpMinMsBetweenEntries            = 60000;
 
 input bool InpDisableDayStop                = true;
 input bool InpUseDailyTarget                = false;
@@ -94,8 +94,8 @@ input bool InpRequireM1TrendAlign           = false;
 input bool InpRequireM1SlowAlign            = false;
 input string InpBlockBuyHours                 = "";
 input string InpBlockSellHours                = "";
-input int InpMaxConsecutiveLosses           = 0;
-input int InpPauseAfterLossStreakMinutes    = 0;
+input int InpMaxConsecutiveLosses           = 3;
+input int InpPauseAfterLossStreakMinutes    = 10;
 input double InpBuyRsiMin                   = 32.0;
 input double InpSellRsiMax                  = 68.0;
 input double InpMaxBuyRsi                   = 55.0;
@@ -221,7 +221,7 @@ int OnInit()
       bbHandle == INVALID_HANDLE || adxHandle == INVALID_HANDLE || atrM5Handle == INVALID_HANDLE ||
       vwapAnchorHandle == INVALID_HANDLE || m1SlowEmaHandle == INVALID_HANDLE)
    {
-      Print("M711 init failed: indicator handle creation failed.");
+      Print("M712 init failed: indicator handle creation failed.");
       return INIT_FAILED;
    }
 
@@ -230,7 +230,7 @@ int OnInit()
    ObjectsDeleteAll(0, "M508_");
    ObjectsDeleteAll(0, "M509_");
    ObjectsDeleteAll(0, "M710_");
-   ObjectsDeleteAll(0, "M711_");
+   ObjectsDeleteAll(0, "M712_");
    PurgeAllTradeChartObjects();
    ClearAllMyChartLines();
    EventSetTimer(1);
@@ -239,7 +239,7 @@ int OnInit()
    myDayPeakProfit = 0.0;
    consecutiveLosses = 0;
    lossStreakPauseUntil = 0;
-   lastStatus = "M711 ready. BTCUSD 24/7 AllEngines (no-loss).";
+   lastStatus = "M712 ready. BTCUSD AllEngines (anti-loss).";
    ShowDashboard();
    return INIT_SUCCEEDED;
 }
@@ -262,7 +262,7 @@ void OnDeinit(const int reason)
    ObjectsDeleteAll(0, "M508_");
    ObjectsDeleteAll(0, "M509_");
    ObjectsDeleteAll(0, "M710_");
-   ObjectsDeleteAll(0, "M711_");
+   ObjectsDeleteAll(0, "M712_");
    ClearAllMyChartLines();
    EventKillTimer();
    Comment("");
@@ -1930,13 +1930,13 @@ bool IsActivePositionChartKey(const ulong key)
 //+------------------------------------------------------------------+
 string ChartObjName(const string prefix, const ulong ticket)
 {
-   return "M711_" + prefix + "_" + IntegerToString(ticket);
+   return "M712_" + prefix + "_" + IntegerToString(ticket);
 }
 
 //+------------------------------------------------------------------+
 string ChartLblName(const string prefix, const ulong ticket)
 {
-   return "M711_" + prefix + "_LBL_" + IntegerToString(ticket);
+   return "M712_" + prefix + "_LBL_" + IntegerToString(ticket);
 }
 
 //+------------------------------------------------------------------+
@@ -2076,7 +2076,7 @@ void ShowDashboard()
    UpdateTodayStats();
    const double dayProfit = GetMyDayProfit();
    string text = "";
-   text += "=== BTCUSD M711 AllEngines (no-loss) ===\n";
+   text += "=== BTCUSD M712 AllEngines (anti-loss) ===\n";
    text += "Lot: " + DoubleToString(NormalizeLots(InpLots), 2);
    text += " | Max loss: $" + DoubleToString(InpDailyMaxLossUSD, 2) + "\n";
    text += "EA P/L: $" + DoubleToString(dayProfit, 2);
